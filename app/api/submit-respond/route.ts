@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     .from('emails')
     .select('id, submitted')
     .eq('email', email)
+    .limit(1)
     .single();
 
   if (emailErr || !emailRow) {

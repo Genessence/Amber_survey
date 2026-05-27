@@ -14,13 +14,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing email' }, { status: 400 });
   }
 
-  const { data: emailRow, error: emailErr } = await supabase
+  const { data: rows, error: emailErr } = await supabase
     .from('emails')
     .select('id, submitted')
     .eq('email', email)
-    .limit(1)
-    .single();
+    .limit(1);
 
+  const emailRow = rows?.[0];
   if (emailErr || !emailRow) {
     return NextResponse.json({ error: 'Email not registered' }, { status: 403 });
   }

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing email' }, { status: 400 });
   }
 
-  const { data: rows, error: emailErr } = await supabase
+  const { data: emailRows, error: emailErr } = await supabase
     .from('emails')
     .select('id, submitted')
     .eq('email', email)
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Database error', detail: emailErr.message }, { status: 500 });
   }
 
-  const emailRow = rows?.[0];
+  const emailRow = emailRows?.[0];
   if (!emailRow) {
     console.log('email not found in table:', email);
     return NextResponse.json({ error: 'Email not registered' }, { status: 403 });

@@ -13,7 +13,7 @@ export async function GET() {
     env: { urlSet, keySet },
     emails: {
       count: count ?? null,
-      error: error ? { code: error.code, message: error.message } : null,
+      error: error ? { code: error.code, message: error.message, details: (error as any).details, hint: (error as any).hint, status: (error as any).status } : null,
     },
   });
 }

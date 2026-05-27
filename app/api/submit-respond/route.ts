@@ -20,8 +20,14 @@ export async function POST(req: NextRequest) {
     .eq('email', email)
     .limit(1);
 
+  if (emailErr) {
+    console.error('emails lookup error:', emailErr.code, emailErr.message);
+    return NextResponse.json({ error: 'Database error', detail: emailErr.message }, { status: 500 });
+  }
+
   const emailRow = rows?.[0];
-  if (emailErr || !emailRow) {
+  if (!emailRow) {
+    console.log('email not found in table:', email);
     return NextResponse.json({ error: 'Email not registered' }, { status: 403 });
   }
 

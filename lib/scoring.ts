@@ -69,10 +69,8 @@ function avg(nums: number[]): number {
 
 export function aggregateScores(rows: AnswerRow[]) {
   if (!rows.length) {
-    return { a: 0, b: 0, c: 0, d: 0, e: 0, f: 0, overall: 0, total: 0, riskScores: {} };
+    return { a: 0, b: 0, c: 0, d: 0, e: 0, f: 0, overall: 0, riskScores: {} as Record<string, number> };
   }
-
-  const total = new Set(rows.map(r => r.submission_id)).size;
 
   const bySection: Record<string, number[]> = { a: [], b: [], c: [], d: [], e: [], f: [] };
   for (const row of rows) {
@@ -99,5 +97,32 @@ export function aggregateScores(rows: AnswerRow[]) {
     riskScores[rq.key] = avg(scores);
   }
 
-  return { a, b, c, d, e, f, overall, total, riskScores };
+  return { a, b, c, d, e, f, overall, riskScores };
+}
+
+export function computePassiveRisk(rows: AnswerRow[]) {
+  const bySubmission = new Map<string, string[]>();
+  for (const row of rows) {
+    const answer = row.answer.trim();
+    if (!(answer in SCORE_MAP)) continue;
+    const list = bySubmission.get(row.submission_id) ?? [];
+    list.push(answer);
+    bySubmission.set(row.submission_id, list);
+  }
+
+  let count = 0;
+  for (const answers of bySubmission.values()) {
+    if (answers.includes('Fully Satisfied')) continue;
+
+    const avg = answers.filter((a) => a === 'Average').length;
+    const sat = answers.filter((a) => a === 'Satisfied').length;
+    const low = answers.filter((a) => a === 'Not Aligned with Amber').length;
+    const max = Math.max(avg, sat, low);
+
+    if (avg === max && avg > 0) count++;
+  }
+
+  const total = bySubmission.size;
+  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+  return { count, pct };
 }

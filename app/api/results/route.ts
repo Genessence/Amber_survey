@@ -1,33 +1,48 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { aggregateScores, RISK_QUESTIONS, type AnswerRow } from '@/lib/scoring';
+import { fetchAllResponses } from '@/lib/responses';
+import { aggregateScores, computePassiveRisk, RISK_QUESTIONS } from '@/lib/scoring';
 
 export async function GET() {
-  const { data: rows, error } = await supabase
-    .from('responses')
-    .select('submission_id, section_key, section_name, question_key, question_text, answer, remark');
+  let rows;
 
-  if (error) {
+  try {
+    rows = await fetchAllResponses();
+  } catch {
     return NextResponse.json({ error: 'Database error' }, { status: 500 });
   }
 
-  const { data: tokenStats, error: tokenErr } = await supabase
-    .from('tokens')
-    .select('plant_count, submitted');
+  const { count: total, error: submissionErr } = await supabase
+    .from('emails')
+    .select('submission_id', { count: 'exact', head: true })
+    .not('submission_id', 'is', null);
 
-  if (tokenErr) {
-    return NextResponse.json({ error: 'Token stats error' }, { status: 500 });
+  if (submissionErr) {
+    return NextResponse.json({ error: 'Submission stats error' }, { status: 500 });
   }
 
-  const totalPlants = tokenStats?.reduce((sum, t) => sum + t.plant_count, 0) ?? 0;
-  const submittedPlants = tokenStats
-    ?.filter(t => t.submitted)
-    .reduce((sum, t) => sum + t.plant_count, 0) ?? 0;
+  const { count: totalPlants, error: plantsErr } = await supabase
+    .from('emails')
+    .select('*', { count: 'exact', head: true });
 
-  const { a, b, c, d, e, f, overall, total, riskScores } = aggregateScores((rows ?? []) as AnswerRow[]);
+  if (plantsErr) {
+    return NextResponse.json({ error: 'Email stats error' }, { status: 500 });
+  }
+
+  const { count: submittedPlants, error: submittedErr } = await supabase
+    .from('emails')
+    .select('*', { count: 'exact', head: true })
+    .eq('submitted', true);
+
+  if (submittedErr) {
+    return NextResponse.json({ error: 'Email submission stats error' }, { status: 500 });
+  }
+
+  const { a, b, c, d, e, f, overall, riskScores } = aggregateScores(rows);
+  const { count: passiveRiskCount, pct: passiveRiskPct } = computePassiveRisk(rows);
 
   return NextResponse.json({
-    total,
+    total: total ?? 0,
     totalSuppliers: parseInt(process.env.TOTAL_SUPPLIERS ?? '0'),
     period: process.env.SURVEY_PERIOD ?? '—',
     scores: { a, b, c, d, e, f },
@@ -38,7 +53,9 @@ export async function GET() {
       section: rq.section,
       score: riskScores[rq.key] ?? 0,
     })),
-    totalPlants,
-    submittedPlants,
+    totalPlants: totalPlants ?? 0,
+    submittedPlants: submittedPlants ?? 0,
+    passiveRiskCount,
+    passiveRiskPct,
   });
 }

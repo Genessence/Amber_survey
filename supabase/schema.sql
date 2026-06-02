@@ -17,3 +17,12 @@ create table tokens (
 -- Add token_id to existing responses table
 alter table responses
   add column if not exists token_id uuid references tokens(id);
+
+-- Distinct submission count for dashboard KPIs (run once in Supabase SQL editor)
+create or replace function count_distinct_submissions()
+returns bigint
+language sql
+stable
+as $$
+  select count(distinct submission_id) from responses;
+$$;

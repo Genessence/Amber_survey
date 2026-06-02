@@ -1,13 +1,19 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import 'tailwindcss';
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-amber-brand-50: #faeeda;
+  --color-amber-brand-700: #ba7517;
+  --color-amber-brand-800: #854f0b;
+  --color-amber-brand-900: #412402;
+  --color-surface-muted: #f7f9fc;
+  --color-surface-border: #e5eaf2;
+  --color-brand-primary: #4f81bd;
+  --color-brand-light: #b8cce4;
+  --color-brand-dark: #1f3a5f;
+  --color-score-green: #2e7d32;
+  --color-score-blue: #4f81bd;
+  --color-score-amber: #ffb300;
+  --color-score-red: #e53935;
 }
 
 html {
@@ -24,17 +30,15 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #1f3a5f;
+  background: var(--color-surface-muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 a {
@@ -42,8 +46,426 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@layer components {
+  .dash-main {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .dash-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 1.25rem;
+    padding-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid #e5eaf2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+
+  .stat-val {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1f3a5f;
+    line-height: 1;
+  }
+
+  .stat-val.compact {
+    font-size: 16px;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
+  .stat-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-top: 6px;
+  }
+
+  .pill-green {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .pill-amber {
+    background: #fff8e1;
+    color: #fb8c00;
+  }
+
+  .pill-red {
+    background: #ffebee;
+    color: #e53935;
+  }
+
+  .pill-blue {
+    background: #e3f2fd;
+    color: #1f3a5f;
+  }
+
+  .pill-excellent {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .pill-good {
+    background: #f1f8e9;
+    color: #2e7d32;
+  }
+
+  .pill-warning {
+    background: #fff8e1;
+    color: #fb8c00;
+  }
+
+  .pill-critical {
+    background: #ffebee;
+    color: #e53935;
+  }
+
+  .pill-brand {
+    background: #e3f2fd;
+    color: #1f3a5f;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #1f3a5f;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5eaf2;
+  }
+
+  .chart-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e5eaf2;
+  }
+
+  .chart-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f3a5f;
+    margin-bottom: 4px;
+  }
+
+  .chart-sub {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 1rem;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 220px;
+  }
+
+  .chart-wrap.tall {
+    height: 300px;
+  }
+
+  .hero-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero-top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .hero-col-compact {
+    padding: 1rem 1.25rem;
+  }
+
+  .hero-col-compact .stat-label {
+    margin-bottom: 4px;
+  }
+
+  .hero-col-compact .stat-pill {
+    margin-top: 4px;
+  }
+
+  .hero-chart-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+  }
+
+  .chart-row-full {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .hero-col {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e5eaf2;
+  }
+
+  .sec-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .sec-mini-card {
+    background: #f7f9fc;
+    border-radius: 10px;
+    padding: 0.75rem;
+    border: 1px solid #e5eaf2;
+  }
+
+  .sec-mini-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+
+  .sec-mini-score {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f3a5f;
+    margin-bottom: 6px;
+  }
+
+  .sec-bar-wrap {
+    height: 4px;
+    background: #e5eaf2;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .sec-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+
+  .analysis-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+  }
+
+  .insight-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e5e2db;
+  }
+
+  .insight-card.green {
+    border-left: 3px solid #639922;
+  }
+
+  .insight-card.amber {
+    border-left: 3px solid #ef9f27;
+  }
+
+  .insight-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .insight-label.green {
+    color: #27500a;
+  }
+
+  .insight-label.amber {
+    color: #633806;
+  }
+
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .risk-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .risk-grid-compact .risk-card {
+    padding: 0.75rem;
+  }
+
+  .risk-grid-compact .risk-q {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+
+  .risk-grid-compact .risk-section {
+    font-size: 10px;
+  }
+
+  .risk-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    border: 1px solid #e5eaf2;
+  }
+
+  .risk-card.excellent {
+    border-left: 3px solid #2e7d32;
+  }
+
+  .risk-card.good {
+    border-left: 3px solid #66bb6a;
+  }
+
+  .risk-card.monitoring {
+    border-left: 3px solid #ffb300;
+  }
+
+  .risk-card.attention {
+    border-left: 3px solid #fb8c00;
+  }
+
+  .risk-card.critical {
+    border-left: 3px solid #e53935;
+  }
+
+  .risk-card.warning {
+    border-left: 3px solid #ffb300;
+  }
+
+  .risk-section {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+
+  .risk-q {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1f3a5f;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .risk-bar-wrap {
+    height: 6px;
+    background: #e5eaf2;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .risk-bar {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.6s ease;
+  }
+
+  .risk-score {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .matrix-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11px;
+    color: #6b7280;
+  }
+
+  .matrix-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+  }
+
+  .strategic-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e5e2db;
+    border-left: 4px solid #ba7517;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .overall-ring-lg {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 12px;
+  }
+
+  .dash-table-head {
+    background: #b8cce4;
+    color: #1f3a5f;
+  }
+
+  .dash-table-head th {
+    color: #1f3a5f;
+  }
+
+  .dash-table-row-alt:nth-child(even) {
+    background: #f7f9fc;
+  }
+
+  @media (max-width: 900px) {
+    .hero-top-row,
+    .analysis-row {
+      grid-template-columns: 1fr;
+    }
   }
 }

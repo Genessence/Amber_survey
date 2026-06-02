@@ -13,6 +13,9 @@ export function useDashboardData() {
     setError(null);
     try {
       const res = await fetch('/api/results');
+      if (res.status === 401) {
+        throw new Error('Session expired. Please sign in again.');
+      }
       if (!res.ok) throw new Error('Failed to load dashboard data');
       const json = (await res.json()) as DashboardData;
       setData(json);

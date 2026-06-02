@@ -8,6 +8,7 @@ import { PerformanceAnalysisRow } from '@/components/dashboard/PerformanceAnalys
 import { ScoreLegendToggle } from '@/components/dashboard/ScoreLegendToggle';
 import { TopKpiRow } from '@/components/dashboard/TopKpiRow';
 import { useDashboardData } from '@/lib/dashboard/useDashboardData';
+import { DashboardSignOut } from '@/components/dashboard/DashboardSignOut';
 
 export default function DashboardPage() {
   const { data, loading, error } = useDashboardData();
@@ -42,6 +43,7 @@ export default function DashboardPage() {
   return (
     <DashboardShell>
       <DashboardHeader data={data} />
+      
 
       <div className="dash-main dash-stack">
         {/* <ScoreLegendToggle /> */}
@@ -49,9 +51,14 @@ export default function DashboardPage() {
         <HeroAnalyticsRow data={data} />
         <PerformanceAnalysisRow data={data} />
         <ContributionAnalysisRow data={data} />
+        <div className="flex justify-end ">
+          <DashboardSignOut />
+        </div>
       </div>
+    
 
       <DashboardFooter />
+      
     </DashboardShell>
   );
 }

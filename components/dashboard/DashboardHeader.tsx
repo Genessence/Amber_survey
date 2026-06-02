@@ -1,7 +1,5 @@
 import type { DashboardData } from '@/lib/dashboard/types';
 import {
-  BG_CARD,
-  BORDER,
   BRAND_DARK,
   BRAND_LIGHT,
   BRAND_PRIMARY,
@@ -36,11 +34,14 @@ export function DashboardHeader({ data }: { data: DashboardData }) {
     </p>
   </div>
 
-  <img
-    src="https://vendor.ambercompliancesystem.com/assets/amber-logo-BvJV0paR.png"
-    alt="Amber"
-    className="h-12 w-auto object-contain"
-  />
+  <div className="flex items-center gap-3">
+    <img
+      src="https://vendor.ambercompliancesystem.com/assets/amber-logo-BvJV0paR.png"
+      alt="Amber"
+      className="h-12 w-auto object-contain"
+    />
+   
+  </div>
 </div>
       </div>
     </header>

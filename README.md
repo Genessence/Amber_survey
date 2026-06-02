@@ -1,5 +1,17 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Dashboard auth
+
+The `/dashboard` page and `/api/results` endpoint require login. Set these server-only variables in `.env`:
+
+| Variable | Purpose |
+|----------|---------|
+| `DASHBOARD_ID` | Dashboard login ID |
+| `DASHBOARD_PASSWORD` | Dashboard login password |
+| `DASHBOARD_SESSION_SECRET` | HMAC secret for session cookies (min 32 characters) |
+
+After starting the dev server, open `/login` to sign in. Sessions last 7 days via an httpOnly cookie.
+
 ## Getting Started
 
 First, run the development server:
